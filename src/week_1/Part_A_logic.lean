@@ -1,5 +1,3 @@
--- We import all of Lean's standard tactics
-import tactic
 
 /-!
 # Logic
@@ -51,7 +49,7 @@ namespace xena
 
 -- Throughout this namespace, P Q and R will be arbitrary (variable)
 -- true-false statements.
-variables (P Q R : Prop)
+variable (P Q R : Prop)
 
 /-!
 ## implies (→)
@@ -62,11 +60,9 @@ the `assumption` tactic.
 -/
 
 /-- Every proposition implies itself. -/
-theorem id : P → P :=
-begin
+theorem id : P → P := by
   -- Prove this using `intro` and `exact`
   sorry
-end
 
 /-
 Note that → isn't associative!
@@ -78,42 +74,32 @@ example : ((false → false) → false) ↔ false := by simp
 
 -- in Lean, `P → Q → R` is _defined_ to mean `P → (Q → R)`
 -- Here's a proof of what I just said.
-example : (P → Q → R) ↔ (P → (Q → R)) :=
-begin
+example : (P → Q → R) ↔ (P → (Q → R)) := by
   -- look at the goal!
-  refl -- true because ↔ is reflexive
-end
+  simp -- true because ↔ is reflexive
 
-theorem imp_intro : P → Q → P :=
-begin
+theorem imp_intro : P → Q → P := by
   -- remember that by definition the goal is P → (Q → P).
   -- Prove this proposition using `intro` and `exact`.
   -- Experiment. Can you prove it using `intros` and `assumption`?
   sorry
-end
 
 /-- If we know `P`, and we also know `P → Q`, we can deduce `Q`. -/
-lemma modus_ponens : P → (P → Q) → Q :=
-begin
+theorem modus_ponens : P → (P → Q) → Q := by
   -- You might find the `apply` tactic useful here.
   sorry
-end
 
 /-- implication is transitive -/
-lemma imp_trans : (P → Q) → (Q → R) → (P → R) :=
-begin
+theorem imp_trans : (P → Q) → (Q → R) → (P → R) := by
   -- The tactics you know should be enough
   sorry
-end
 
 -- This one is a "relative modus ponens" -- in the
 -- presence of P, if Q -> R and Q then R.
-lemma forall_imp : (P → Q → R) → (P → Q) → (P → R) :=
-begin
+theorem forall_imp : (P → Q → R) → (P → Q) → (P → R) := by
   -- `intros hPQR hPQ hP,` would be a fast way to start.
   -- Make sure you understand what is going on there, if you use it.
   sorry
-end
 
 /-
 
@@ -128,49 +114,40 @@ We develop a basic interface for `¬`.
 
 
 -- I'll prove this one for you
-theorem not_iff_imp_false : ¬ P ↔ (P → false) :=
-begin
+theorem not_iff_imp_false : ¬ P ↔ (P → false) := by
   -- true by definition
-  refl
-end
+  simp
 
-theorem not_not_intro : P → ¬ (¬ P) :=
-begin
-  intro hP,
-  rw not_iff_imp_false,
+theorem not_not_intro : P → ¬ (¬ P) := by
+  intro hP
   -- You can use `rw not_iff_imp_false` to change `¬ X` into `X → false`. 
   -- But you don't actually have to, because they are the same *by definition*
-  sorry,
-end
+  sorry
 
 -- Here is a funny alternative proof! Can you work out how it works?
-example : P → ¬ (¬ P) :=
-begin
-  apply modus_ponens,
-end
+example : P → ¬ (¬ P) := by
+  -- apply modus_ponens
+  sorry
 
 -- Here is a proof which does not use tactics at all, but uses lambda calculus.
 -- It is called a "term mode" proof. We will not be discussing term mode
 -- much in this course. It is a cool way to do basic logic proofs, but
 -- it does not scale well in practice.
-example : P → ¬ (¬ P) :=
-λ hP hnP, hnP hP
+example : P → ¬ (¬ P) := by
+-- λ hP hnP, hnP hP
+  sorry
 
 -- This is "modus tollens". Some mathematicians think of it as
 -- "proof by contradiction".
-theorem modus_tollens : (P → Q) → (¬ Q → ¬ P) :=
-begin
-  sorry,
-end
+theorem modus_tollens : (P → Q) → (¬ Q → ¬ P) := by
+  sorry
 
 -- This one cannot be proved using constructive mathematics!
 -- You _have_ to use a tactic like `by_contra` (or, if you're happy
 -- to cheat, the full "truth table" tactic `tauto!`.
 -- Try it without using these, and you'll get stuck!
-theorem double_negation_elimination : ¬ (¬ P) → P :=
-begin
-  sorry,
-end
+theorem double_negation_elimination : ¬ (¬ P) → P := by
+  sorry
 
 /-!
 
@@ -209,58 +186,47 @@ end
 
 -/
 
-theorem and.elim_left : P ∧ Q → P :=
-begin
+theorem and.elim_left : P ∧ Q → P := by
   -- I would recommend starting with
   -- `intro hPaQ,` and then `cases hPaQ with hP hQ`.
   sorry
-end
 
-theorem and.elim_right : P ∧ Q → Q :=
-begin
+theorem and.elim_right : P ∧ Q → Q := by
   sorry
-end
 
 -- fancy term mode proof
-example : P ∧ Q → Q := λ hPaQ, hPaQ.2
+example : P ∧ Q → Q := by
+-- λ hPaQ, hPaQ.2
+  sorry
 
-theorem and.intro : P → Q → P ∧ Q :=
-begin
+theorem and.intro : P → Q → P ∧ Q := by
   -- remember the `split` tactic.
   sorry
-end
 
 /-- the eliminator for `∧` -/ 
-theorem and.elim : P ∧ Q → (P → Q → R) → R :=
-begin
-  sorry,
-end
+theorem and.elim : P ∧ Q → (P → Q → R) → R := by
+  sorry
 
 /-- The recursor for `∧` -/
 theorem and.rec : (P → Q → R) → P ∧ Q → R :=
-begin
   sorry
-end
 
 /-- `∧` is symmetric -/
-theorem and.symm : P ∧ Q → Q ∧ P :=
-begin
+theorem and.symm : P ∧ Q → Q ∧ P := by
   sorry
-end
 
 -- term mode proof
-example : P ∧ Q → Q ∧ P :=
-λ ⟨hP, hQ⟩, ⟨hQ, hP⟩
+example : P ∧ Q → Q ∧ P := by
+-- λ ⟨hP, hQ⟩, ⟨hQ, hP⟩
+  sorry
 
 /-- `∧` is transitive -/
-theorem and.trans : (P ∧ Q) → (Q ∧ R) → (P ∧ R) :=
-begin
+theorem and.trans : (P ∧ Q) → (Q ∧ R) → (P ∧ R) := by
   -- The `rintro` tactic will do `intro` and `cases` all in one go.
   -- If you like, try starting this proof with `rintro ⟨hP, hQ⟩` if you want
   -- to experiment with it. Get the pointy brackets with `\<` and `\>`,
   -- or both at once with `\<>`.
-  sorry,
-end
+  sorry
 
 /-
 Recall that the convention for the implies sign →
@@ -274,12 +240,8 @@ We proved that `P → Q → R` implied `(P ∧ Q) → R`; this was `and.rec`.
 Let's go the other way.
 -/
 
-lemma imp_imp_of_and_imp : ((P ∧ Q) → R) → (P → Q → R) :=
-begin
-  sorry,
-end
-
-
+theorem imp_imp_of_and_imp : ((P ∧ Q) → R) → (P → Q → R) := by
+  sorry
 /-!
 
 ### iff
@@ -293,56 +255,45 @@ a hypothesis `h : P ↔ Q`, and `split` if you have a goal `⊢ P ↔ Q`.
 -/
 
 /-- `P ↔ P` is true for all propositions `P`, i.e. `↔` is reflexive. -/
-theorem iff.refl : P ↔ P :=
-begin
+theorem iff.refl : P ↔ P := by
   -- start with `split`
-  sorry,
-end
+  sorry
 
 -- If you get stuck, there is always the "truth table" tactic `tauto!`
-example : P ↔ P :=
-begin
-  tauto!, -- the "truth table" tactic.
-end
+example : P ↔ P := by
+  sorry
+  -- tauto!, -- the "truth table" tactic.
 
 -- refl tactic also works
-example : P ↔ P :=
-begin
-  refl -- `refl` knows that `=` and `↔` are reflexive.
-end
+example : P ↔ P := by
+  -- refl -- `refl` knows that `=` and `↔` are reflexive.
+  sorry
 
 /-- `↔` is symmetric -/
-theorem iff.symm : (P ↔ Q) → (Q ↔ P) :=
-begin
+theorem iff.symm : (P ↔ Q) → (Q ↔ P) := by
   sorry
-end
 
 -- NB there is quite a devious proof of this using `rw`.
 
 -- show-off term mode proof
-example : (P ↔ Q) → (Q ↔ P) :=
-λ ⟨hPQ, hQP⟩, ⟨hQP, hPQ⟩
+example : (P ↔ Q) → (Q ↔ P) := by
+-- λ ⟨hPQ, hQP⟩, ⟨hQP, hPQ⟩
+  sorry
 
 /-- `↔` is commutative -/
-theorem iff.comm : (P ↔ Q) ↔ (Q ↔ P) :=
-begin
+theorem iff.comm : (P ↔ Q) ↔ (Q ↔ P) := by
   sorry
-end
 
 -- without rw or cc this is painful!
 /-- `↔` is transitive -/
-theorem iff.trans :  (P ↔ Q) → (Q ↔ R) → (P ↔ R) :=
-begin
-  sorry,
-end
+theorem iff.trans :  (P ↔ Q) → (Q ↔ R) → (P ↔ R) := by
+  sorry
 
 -- This can be done constructively, but it's hard. You'll need to know
 -- about the `have` tactic to do it. Alternatively the truth table
 -- tactic `tauto!` will do it.
-theorem iff.boss : ¬ (P ↔ ¬ P) :=
-begin
+theorem iff.boss : ¬ (P ↔ ¬ P) := by
   sorry
-end
 
 -- Now we have iff we can go back to and.
 
@@ -351,10 +302,8 @@ end
 -/
 
 /-- `∧` is commutative -/
-theorem and.comm : P ∧ Q ↔ Q ∧ P :=
-begin
-  sorry,
-end
+theorem and.comm : P ∧ Q ↔ Q ∧ P := by
+  sorry
 
 -- fancy term-mode proof
 example : P ∧ Q ↔ Q ∧ P :=
@@ -364,10 +313,8 @@ example : P ∧ Q ↔ Q ∧ P :=
 -- that `P ∧ Q ∧ R` is _defined to mean_ `P ∧ (Q ∧ R)`.
 -- Associativity can hence be written like this:
 /-- `∧` is associative -/
-theorem and_assoc : ((P ∧ Q) ∧ R) ↔ (P ∧ Q ∧ R) :=
-begin
-  sorry,
-end
+theorem and_assoc : ((P ∧ Q) ∧ R) ↔ (P ∧ Q ∧ R) := by
+  sorry
 
 
 
@@ -393,75 +340,51 @@ and if you want to prove `Q` then use the `right` tactic.
 variable (S : Prop)
 
 -- You will need to use the `left` tactic for this one.
-theorem or.intro_left : P → P ∨ Q :=
-begin
+theorem or.intro_left : P → P ∨ Q := by
   sorry
-end
 
-theorem or.intro_right : Q → P ∨ Q :=
-begin
-  sorry,
-end
+theorem or.intro_right : Q → P ∨ Q := by
+  sorry
 
 /-- the eliminator for `∨`. -/
-theorem or.elim : P ∨ Q → (P → R) → (Q → R) → R :=
-begin
+theorem or.elim : P ∨ Q → (P → R) → (Q → R) → R := by
   sorry
-end
 
 /-- `∨` is symmetric -/
-theorem or.symm : P ∨ Q → Q ∨ P :=
-begin
+theorem or.symm : P ∨ Q → Q ∨ P := by
   sorry
-end
 
 /-- `∨` is commutative -/
-theorem or.comm : P ∨ Q ↔ Q ∨ P :=
-begin
-  sorry,
-end
+theorem or.comm : P ∨ Q ↔ Q ∨ P := by
+  sorry
 
 /-- `∨` is associative -/
-theorem or.assoc : (P ∨ Q) ∨ R ↔ P ∨ Q ∨ R :=
-begin
-  sorry,
-end
+theorem or.assoc : (P ∨ Q) ∨ R ↔ P ∨ Q ∨ R := by
+  sorry
 
 /-!
 ### More about → and ∨
 -/
 
-theorem or.imp : (P → R) → (Q → S) → P ∨ Q → R ∨ S :=
-begin
-  sorry,
-end
+theorem or.imp : (P → R) → (Q → S) → P ∨ Q → R ∨ S := by
+  sorry
 
-theorem or.imp_left : (P → Q) → P ∨ R → Q ∨ R :=
-begin
-  sorry,
-end
+theorem or.imp_left : (P → Q) → P ∨ R → Q ∨ R := by
+  sorry
 
-theorem or.imp_right : (P → Q) → R ∨ P → R ∨ Q :=
-begin
-  sorry,
-end
+theorem or.imp_right : (P → Q) → R ∨ P → R ∨ Q := by
+  sorry
 
-theorem or.left_comm : P ∨ Q ∨ R ↔ Q ∨ P ∨ R :=
-begin
+theorem or.left_comm : P ∨ Q ∨ R ↔ Q ∨ P ∨ R := by
   -- Try rewriting `or.comm` and `or.assoc` to do this one quickly.
-  sorry,
-end
+  sorry
 
 /-- the recursor for `∨` -/
-theorem or.rec : (P → R) → (Q → R) → P ∨ Q → R :=
-begin
-  sorry,
-end
+theorem or.rec : (P → R) → (Q → R) → P ∨ Q → R := by
+  sorry
 
-theorem or_congr : (P ↔ R) → (Q ↔ S) → (P ∨ Q ↔ R ∨ S) :=
-begin
-  sorry,
-end
+theorem or_congr : (P ↔ R) → (Q ↔ S) → (P ∨ Q ↔ R ∨ S) := by
+  sorry
 
 /-!
 
@@ -484,32 +407,22 @@ Hint: how many cases are there?
 
 
 /-- eliminator for `false` -/
-theorem false.elim : false → P :=
-begin
-  sorry,
-end
+theorem false.elim : false → P := by
+  sorry
 
-theorem and_true_iff : P ∧ true ↔ P :=
-begin
-  sorry,
-end
+theorem and_true_iff : P ∧ true ↔ P := by
+  sorry
 
-theorem or_false_iff : P ∨ false ↔ P :=
-begin
-  sorry,
-end
+theorem or_false_iff : P ∨ false ↔ P := by
+  sorry
 
 -- false.elim is handy for this one
-theorem or.resolve_left : P ∨ Q → ¬P → Q :=
-begin
-  sorry,
-end
+theorem or.resolve_left : P ∨ Q → ¬P → Q := by
+  sorry
 
 -- this one you can't do constructively
-theorem or_iff_not_imp_left : P ∨ Q ↔ ¬P → Q :=
-begin
-  sorry,
-end
+theorem or_iff_not_imp_left : P ∨ Q ↔ ¬P → Q := by
+  sorry
 
 end xena
 

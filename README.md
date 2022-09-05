@@ -2,6 +2,8 @@
 
 Repository for the Jan-Mar 2021 EPSRC TCC course on formalising mathematics, delivered to mathematicians at Imperial, Oxford, Bristol, Bath and Warwick.
 
+(Forked to make it work in Lean4)
+
 ## What is this?
 
 In this course, we're going to be turning maths theorems into levels of a computer game called Lean. We'll start off with proving basic stuff like composite of injective functions is injective. We'll move on to harder mathematics as the course goes on. The course comprises 8 workshops. You don't have to do all the questions in each workshop.
